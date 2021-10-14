@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    expose: 
+      - "5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - database.env
+
+  app:
+    image: nextcloud:apache
+    restart: always
+    ports:
+      - 0.0.0.0:50:80
+    volumes:
+      - nextcloud:/var/www/html
+      - E:\nextcloud\config:/var/www/html/config
+      - E:\nextcloud\data:/var/www/html/data
+    environment:
+      - POSTGRES_HOST=db
+    env_file:
+      - database.env
+    depends_on:
+      - db
+
+volumes:
+  db:
+  nextcloud:
